@@ -21,17 +21,3 @@ ReactDOM.render(<MyComponent/>,
     document.querySelector('main')
 );
 
-var simpleComponent = React.createClass({
-    render: function() {
-        var name = "Rosemary";
-        var interest = "dance";
-        return(
-            <div>
-                <p>{name}</p>
-                <p>{interest}</p>
-            </div>
-        )
-    }
-});
-
-ReactDOM.render(<simpleComponent/>, document.querySelector('main'));
