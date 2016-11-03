@@ -51,15 +51,27 @@ var EmployeeSearch = React.createClass({
         return({searchString:''});
     },
     // Add a filter funciton
+    //dd a function `filter` to your `EmployeeTable` component in which you get the value of the event (`event.target.value`), 
+    //and then **set the state** of your `searchString` to that value
+
+    filter:function(event) {
+        var value = event.target.value;
+        this.setState({searchString:value});
+    },
 
     render:function() {
         var employees = this.props.data;
 
         // Use this.state.searchString to filter down the `employees` array
+        //In your `render` function, use `this.state.searchString` to filter down your `employees` array.
+        employees.filter(function(d) {
+            return d.name.match(this.state.searchString)
+        }.bind(this));
+
 
         return(
             <div>
-                <input placeholder="Search employees"/>
+                <input onChange={this.filter} placeholder="Search employees"/>
                 <EmployeeTable data={employees}/>
             </div>
         )

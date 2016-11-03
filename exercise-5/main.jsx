@@ -7,7 +7,7 @@ const baseUrl = 'https://api.themoviedb.org/3/discover/movie?';
 
 // Set image size, url (more info at https://developers.themoviedb.org/3/getting-started/images)
 const imageSize = 'w300'
-const imageUrl = 'https://image.tmdb.org/t/p/' + imageSize
+const imageUrl = 'https://image.tmdb.org/t/p/' + imageSize + '?'
 
 // Some controls for the movie list
 var MovieControls = React.createClass({
@@ -38,6 +38,7 @@ var MovieItem = React.createClass({
     render:function() {
         // Return image card
         // Taken from: http://materializecss.com/cards.html
+        var imgPath = imgUrl + this.props.data.poster_path + apiKey;
         return(
                 <div className="col s3">
                     <div className="card">
@@ -57,14 +58,14 @@ var MovieItem = React.createClass({
 var MovieApp = React.createClass({
     // Set initlal state: empty array for movies, order:'popularity'
     getInitialState:function() {
-        return null;
+        return {movies: [], order: 'popularity'}
     },
 
     // Function to get movies from the API
     getMovies:function() {
         // Searh most popular movies
         // See: https://www.themoviedb.org/documentation/api/discover
-        let url = baseUrl + apiKey + '&sort_by=popularity.desc'
+        var url = baseUrl + apiKey + '&sort_by=popularity.desc'
         $.get(url).then(function(data){
             this.setState({movies: data.results});
         }.bind(this)) // bind component to "this" to use inside callback
@@ -79,22 +80,28 @@ var MovieApp = React.createClass({
 
     // Function to set the "order" of state
     setOrder:function(element) {
-
+        var value = element.target.id;
+        this.setState({order:value});
     },
 
     // When the component mounts, get the movies from the API
     componentDidMount:function() {
-
+        console.log('mounted ayo');
+        this.getMovies()
     },
 
     // Render function
     render:function() {
         // Sort your movies
+        var sortedMovies = this.sortMovies(this.state.movies, this.state.order);
 
 
         // Return a MovieItem for each element in your sorted array, and a MovieControls element
         return(
             <div className="container">
+                {sortedMovies.map(function(d){
+                    return <MovieItem data={d} />
+                })}
             </div>
         );
     }
